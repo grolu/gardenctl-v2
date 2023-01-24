@@ -48,8 +48,9 @@ jobs:
       - name: Send update with latest versions to ${{ github.repository_owner }}/chocolatey-packages
         if: github.event.release.prerelease == false
         run: |
+          latest_release_filtered_tag=${{ env.latest_release_filtered_tag }}
           windows_sha256sum=$(sha256sum bin/windows-amd64/gardenctl_v2_windows_amd64.exe | awk '{print $1}')
-          data='{"event_type": "update", "client_payload": { "component": "gardenctl-v2", "tag": "'"$env.latest_release_filtered_tag"'", "windows_sha": "'"$windows_sha256sum"'"}}'
+          data='{"event_type": "update", "client_payload": { "component": "gardenctl-v2", "tag": "'"$latest_release_filtered_tag"'", "windows_sha": "'"$windows_sha256sum"'"}}'
           echo "${data}"
           curl -X POST https://api.github.com/repos/${{ github.repository_owner }}/chocolatey-packages/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
